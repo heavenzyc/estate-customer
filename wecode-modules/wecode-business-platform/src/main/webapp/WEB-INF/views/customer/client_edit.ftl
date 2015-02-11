@@ -7,10 +7,10 @@
             <!-- PAGE CONTENT BEGINS -->
             <div class="clearfix form-actions">
                 <div class="col-md-offset-2 col-md-9" style="font-size: 24px">
-                    出  库  单
+                    入  库  单
                 </div>
             </div>
-            <form id="add_output_info" class="form-horizontal" houseType="form" action="/output/modify" method="post">
+            <form id="add_input_info" class="form-horizontal" houseType="form" action="/input/modify" method="post">
                 <input type="hidden" name="id" value="${data.id}"/>
                 <input type="hidden" id="senderId" value="${data.send_person_id}"/>
                 <input type="hidden" id="accepterId" value="${data.accept_person_id}"/>
@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">收货单位</label>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">供货单位</label>
                     <div class="col-sm-10">
                         <select class="width-40 chosen-select" id="provideMerchant" data-placeholder="请选择..." name="merchant_id" onchange="getSender()">
                             <#list providers as provide>
@@ -43,26 +43,16 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">数量</label>
                     <div class="col-sm-10">
-                        <input type="text" id="count" class="col-xs-10 col-sm-5" name="count" value="${data.count}" maxlength="10"/>
+                        <input type="text" id="count" class="col-xs-10 col-sm-5" name="count" value="${data.count}" maxlength="10" datatype="s2-20" nullmsg="请输入数量"/>
                         <label id="unit">${data.unit}</label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">收货人</label>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">发货人</label>
                     <div class="col-sm-10" id="senderDiv"></div>
                 </div>
-            <#--<div class="form-group">
-                <label class="col-sm-2 control-label no-padding-right" for="form-field-1">收货单位</label>
-                <div class="col-sm-10">
-                    <select class="width-40 chosen-select" id="acceptMerchant" data-placeholder="请选择..." name="accept_merchant_code" onchange="getAccepter()">
-                        <#list accepts as ac>
-                            <option value="${ac.code}" <#if ac.code==data.accept_merchant_code>selected</#if> >${ac.name}</option>
-                        </#list>
-                    </select>
-                </div>
-            </div>-->
                 <div class="form-group">
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">发货人</label>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">收货人</label>
                     <div class="col-sm-10" id="accepterDiv">
                         <select class="width-40 chosen-select" data-placeholder="请选择..." name="accept_person_id">
                             <#list staffs as ac>
@@ -73,9 +63,9 @@
                 </div>
 
                 <div class="form-group"  >
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">所出仓库</label>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">所入仓库</label>
                     <div class="col-sm-10">
-                        <input type="text" id="structure" class="col-xs-10 col-sm-5" name="warehouse" value="${data.warehouse}" maxlength="50"/>
+                        <input type="text" id="structure" class="col-xs-10 col-sm-5" name="warehouse" value="${data.warehouse}" maxlength="50" nullmsg="请输入户型结构" datatype="s"/>
                     </div>
                 </div>
                 <div class="form-group"  >
@@ -130,49 +120,10 @@
         $(".chosen-select").chosen();
 
         // 验证插件
-        $("#add_output_info").validity(function(){
+        $("#add_input_info").validity(function(){
             $("#count").require("请输入价格").match("number");
         });
-        getSender();
-        getUnit();
     })
-
-    function getSender(){
-        var id = $("#provideMerchant").val();
-        var senderId = $("#senderId").val();
-        $.ajax({
-            url:'/output/getSendPersons',
-            type:'get',
-            data:{merchantId:id},
-            success:function(json){
-                var data = json.data;
-                $("#senderDiv").empty();
-                var html = '<select class="width-40 chosen-select" data-placeholder="请选择..." name="send_person_id">'
-                for(var i=0; i<data.length; i++) {
-                    if(data[i].id==senderId){
-                        html += "<option selected value="+data[i].id+">"+data[i].name+"</option>";
-                    }else {
-                        html += "<option value="+data[i].id+">"+data[i].name+"</option>";
-                    }
-                }
-                html += "</select>"
-                $("#senderDiv").append(html);
-                $(".chosen-select").chosen();
-            }
-        });
-    }
-
-    function getUnit(){
-        var id = $("#material").val();
-        $.ajax({
-            url:'/output/getUnit',
-            type:'get',
-            data:{material:id},
-            success:function(json){
-                $("#unit").html("").html(json);
-            }
-        });
-    }
 
 </script>
 

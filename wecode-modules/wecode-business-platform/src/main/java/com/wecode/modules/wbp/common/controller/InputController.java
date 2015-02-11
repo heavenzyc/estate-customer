@@ -1,14 +1,13 @@
 package com.wecode.modules.wbp.common.controller;
 
-import com.jfinal.aop.Before;
 import com.jfinal.ext.route.ControllerBind;
 import com.jfinal.kit.JsonKit;
 import com.jfinal.plugin.activerecord.Page;
-import com.jfinal.plugin.activerecord.tx.Tx;
 import com.wecode.framework.json.JsonResult;
 import com.wecode.framework.util.DateUtils;
 import com.wecode.framework.util.StringUtils;
-import com.wecode.modules.wbp.common.model.*;
+import com.wecode.modules.wbp.common.model.InputInfo;
+import com.wecode.modules.wbp.common.model.Status;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -63,189 +62,6 @@ public class InputController extends BaseController{
         renderJson(JsonKit.toJson(root));
     }
 
-    public void add(){
-        List<Merchant> merchants = Merchant.getList();
-        List<Material> materials = Material.getList();
-        List<Staff> staffs = Staff.getList();
-        setAttr("providers",merchants);
-        setAttr("materials",materials);
-        setAttr("staffs",staffs);
-        renderFreeMarker("input_add.ftl");
-    }
-
-    @Before(Tx.class)
-    public void save(){
-        String code = currentTimeMillis();
-        String project_name = getPara("project_name");
-        String contract_num = getPara("contract_num");
-        String merchant_id = getPara("merchant_id");
-        String merchant_name = Merchant.dao.findById(merchant_id).get("name");
-        String warehouse = getPara("warehouse");
-        String material_id = getPara("material_id");
-        Material material = Material.dao.findById(material_id);
-        String material_name = material.get("name");
-        String material_code = material.get("code");
-        String purchase_type_id = material.get("type_id");
-        String purchase_type_name = material.get("type_name");
-        String standard_id = material.get("standard_id");
-        String standard_name = material.get("standard_name");
-        BigDecimal count = getBigDecimal("count");
-        String transport_person = getPara("transport_person");
-        String car_num = getPara("car_num");
-        String weigh_person = getPara("weigh_person");
-        String send_person_id = getPara("send_person_id");
-        Person person = Person.dao.findById(send_person_id);
-        String send_person = "";
-        if (person != null) {
-            send_person = person.get("name");
-        }
-        String accept_person_id = getPara("accept_person_id");
-        String accept_person = "";
-        Staff staff = Staff.dao.findById(accept_person_id);
-        if (staff != null) {
-            accept_person = staff.get("name");
-        }
-        String remark = getPara("remark");
-        InputInfo info = new InputInfo();
-        info.set("code",code);
-        info.set("project_name",project_name);
-        info.set("contract_num",contract_num);
-        info.set("merchant_id",merchant_id);
-        info.set("merchant_name",merchant_name);
-        info.set("warehouse",warehouse);
-        info.set("material_id",material_id);
-        info.set("material_name",material_name);
-        info.set("material_code",material_code);
-        info.set("purchase_type_id",purchase_type_id);
-        info.set("purchase_type_name",purchase_type_name);
-        info.set("standard_name",standard_name);
-        info.set("standard_id",standard_id);
-        info.set("count",count);
-        BigDecimal percent = new BigDecimal(1);
-        if (material.getBigDecimal("discount") != null) {
-            percent = (new BigDecimal(100).subtract(material.getBigDecimal("discount"))).divide(new BigDecimal(100));
-            info.set("discount",material.getBigDecimal("discount"));
-        }else{
-            info.set("discount",BigDecimal.ZERO);
-        }
-        if (material.getBigDecimal("price")!= null) {
-            info.set("money",(count.multiply(material.getBigDecimal("price"))).multiply(percent));
-        }else {
-            info.set("money",BigDecimal.ZERO);
-        }
-        if (material.getBigDecimal("price") != null) {
-            info.set("price",material.getBigDecimal("price"));
-        }else {
-            info.set("price",BigDecimal.ZERO);
-        }
-        info.set("unit",material.getStr("unit"));
-        info.set("transport_person",transport_person);
-        info.set("car_num",car_num);
-        info.set("weigh_person",weigh_person);
-        info.set("send_person_id",send_person_id);
-        info.set("send_person",send_person);
-        info.set("accept_person_id",accept_person_id);
-        info.set("accept_person",accept_person);
-        info.set("input_time",new Date());
-        info.set("remark",remark);
-        info.set("create_time",new Date());
-        info.set("status",Status.VALID.name());
-        info.set("type","ADD");
-        info.save();
-        redirect("/input/index");
-    }
-
-    public void update(){
-        Integer id = getParaToInt();
-        InputInfo info = InputInfo.dao.findById(id);
-        setAttr("data",info);
-        List<Merchant> merchants = Merchant.getList();
-        List<Material> materials = Material.getList();
-//        List<AcceptMerchant> accepts = AcceptMerchant.getList();
-        List<Staff> staffs = Staff.getList();
-        setAttr("providers",merchants);
-        setAttr("materials",materials);
-        setAttr("staffs",staffs);
-        renderFreeMarker("input_edit.ftl");
-    }
-
-    @Before(Tx.class)
-    public void modify(){
-        Integer id = getParaToInt("id");
-        InputInfo info = InputInfo.dao.findById(id);
-        String project_name = getPara("project_name");
-        String contract_num = getPara("contract_num");
-        String merchant_id = getPara("merchant_id");
-        String merchant_name = Merchant.dao.findById(merchant_id).get("name");
-        String warehouse = getPara("warehouse");
-        String material_id = getPara("material_id");
-        Material material = Material.dao.findById(material_id);
-        String material_name = material.get("name");
-        String material_code = material.get("code");
-        String purchase_type_id = material.get("type_id");
-        String purchase_type_name = material.get("type_name");
-        String standard_id = material.get("standard_id");
-        String standard_name = material.get("standard_name");
-        BigDecimal count = getBigDecimal("count");
-        String transport_person = getPara("transport_person");
-        String car_num = getPara("car_num");
-        String weigh_person = getPara("weigh_person");
-        String send_person_id = getPara("send_person_id");
-        Person person = Person.dao.findById(send_person_id);
-        String send_person = "";
-        if (person != null) {
-            send_person = person.get("name");
-        }
-        String accept_person_id = getPara("accept_person_id");
-        String accept_person = "";
-        Staff staff = Staff.dao.findById(accept_person_id);
-        if (staff != null) {
-            accept_person = staff.get("name");
-        }
-        String remark = getPara("remark");
-        info.set("project_name",project_name);
-        info.set("contract_num",contract_num);
-        info.set("merchant_id",merchant_id);
-        info.set("merchant_name",merchant_name);
-        info.set("material_code",material_code);
-        info.set("warehouse",warehouse);
-        info.set("material_id",material_id);
-        info.set("material_name",material_name);
-        info.set("purchase_type_id",purchase_type_id);
-        info.set("purchase_type_name",purchase_type_name);
-        info.set("standard_name",standard_name);
-        info.set("standard_id",standard_id);
-        info.set("count",count);
-        BigDecimal percent = new BigDecimal(1);
-        if (material.getBigDecimal("discount") != null) {
-            percent = (new BigDecimal(100).subtract(material.getBigDecimal("discount"))).divide(new BigDecimal(100));
-            info.set("discount",material.getBigDecimal("discount"));
-        }else{
-            info.set("discount",BigDecimal.ZERO);
-        }
-        if (material.getBigDecimal("price")!= null) {
-            info.set("money",(count.multiply(material.getBigDecimal("price"))).multiply(percent));
-        }else {
-            info.set("money",BigDecimal.ZERO);
-        }
-        if (material.getBigDecimal("price") != null) {
-            info.set("price",material.getBigDecimal("price"));
-        }else {
-            info.set("price",BigDecimal.ZERO);
-        }
-        info.set("unit",material.getStr("unit"));
-        info.set("transport_person",transport_person);
-        info.set("car_num",car_num);
-        info.set("weigh_person",weigh_person);
-        info.set("send_person_id",send_person_id);
-        info.set("send_person",send_person);
-        info.set("accept_person_id",accept_person_id);
-        info.set("accept_person",accept_person);
-        info.set("remark",remark);
-        info.update();
-        redirect("/input/index");
-    }
-
 
     public void delete(){
         Integer id = getParaToInt("id");
@@ -255,23 +71,6 @@ public class InputController extends BaseController{
             info.update();
         }
         renderJson(JsonResult.success());
-    }
-
-    public void getSendPersons(){
-        String merchantId = getPara("merchantId");
-        List<Person> persons = Person.getPersons(merchantId);
-        Map root = new HashMap();
-        root.put("data", persons);
-        renderJson(JsonKit.toJson(root));
-    }
-
-    public void getUnit(){
-        String id = getPara("material");
-        Material material = Material.dao.findById(id);
-        if (material != null) {
-            renderJson(material.get("unit"));
-        }
-
     }
 
     public void importExcel(){

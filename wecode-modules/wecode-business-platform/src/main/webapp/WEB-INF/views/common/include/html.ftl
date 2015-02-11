@@ -170,13 +170,13 @@
     <li class="active">
         <a href="javascript:void(0)">
             <i class="icon-dashboard"></i>
-            <span class="menu-text"> 套账管理系统 </span>
+            <span class="menu-text">潜在客户管理系统 </span>
         </a>
     </li>
     <li>
         <a href="#" class="dropdown-toggle">
             <i class="icon-list"></i>
-            <span class="menu-text"> 入库管理 </span>
+            <span class="menu-text"> 客户管理 </span>
             <b class="arrow icon-angle-down"></b>
         </a>
 
@@ -184,117 +184,12 @@
             <li>
                 <a href="/input">
                     <i class="icon-double-angle-right"></i>
-                    入库单
+                    客户列表
                 </a>
             </li>
         </ul>
     </li>
-    <li>
-        <a href="#" class="dropdown-toggle">
-            <i class="icon-list"></i>
-            <span class="menu-text"> 出库管理 </span>
-            <b class="arrow icon-angle-down"></b>
-        </a>
-        <ul class="submenu">
-            <li>
-                <a href="/output">
-                    <i class="icon-double-angle-right"></i>
-                    出库单
-                </a>
-            </li>
-        </ul>
-    </li>
-    <li>
-        <a href="#" class="dropdown-toggle">
-            <i class="icon-list"></i>
-            <span class="menu-text"> 运输管理 </span>
-            <b class="arrow icon-angle-down"></b>
-        </a>
-        <ul class="submenu">
-            <li>
-                <a href="/transport">
-                    <i class="icon-double-angle-right"></i>
-                    承运单
-                </a>
-            </li>
-        </ul>
-    </li>
-    <li>
-        <a href="#" class="dropdown-toggle">
-            <i class="icon-list"></i>
-            <span class="menu-text"> 费用管理 </span>
-            <b class="arrow icon-angle-down"></b>
-        </a>
-        <ul class="submenu">
-            <li>
-                <a href="/loan">
-                    <i class="icon-double-angle-right"></i>
-                    借款单
-                </a>
-            </li>
-            <li>
-                <a href="/receive">
-                    <i class="icon-double-angle-right"></i>
-                    收款单
-                </a>
-            </li>
-        </ul>
-    </li>
-    <#--<li>
-        <a href="#" class="dropdown-toggle">
-            <i class="icon-list"></i>
-            <span class="menu-text"> 结算管理 </span>
-            <b class="arrow icon-angle-down"></b>
-        </a>
-        <ul class="submenu">
-            <li>
-                <a href="#">
-                    <i class="icon-double-angle-right"></i>
-                    材料结算清单
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="icon-double-angle-right"></i>
-                    运费结算清单
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="icon-double-angle-right"></i>
-                    矿石加工及运费结算清单
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="icon-double-angle-right"></i>
-                    利润结算清单
-                </a>
-            </li>
-        </ul>
-    </li>
-    <li>
-        <a href="#" class="dropdown-toggle">
-            <i class="icon-list"></i>
-            <span class="menu-text"> 统计查询 </span>
-            <b class="arrow icon-angle-down"></b>
-        </a>
-        <ul class="submenu">
-            <li>
-                <a href="#">
-                    <i class="icon-double-angle-right"></i>
-                    统计1
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="icon-double-angle-right"></i>
-                    统计2
-                </a>
-            </li>
-        </ul>
-    </li>-->
-</ul><!-- /.nav-list -->
+</ul>
 
 <div class="sidebar-collapse" id="sidebar-collapse">
     <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>

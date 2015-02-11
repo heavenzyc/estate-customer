@@ -6,7 +6,7 @@
         <entry key="jdbc.driverClassName">com.p6spy.engine.spy.P6SpyDriver</entry>
         <!--<entry key="jdbc.driverClassName">com.mysql.jdbc.Driver</entry>-->
         <!--开发环境-->
-		<entry key="jdbc.url">jdbc:mysql://localhost:3306/zfb_dev?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull</entry>
+		<entry key="jdbc.url">jdbc:mysql://localhost:3306/estate-customer?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull</entry>
         <entry key="jdbc.username">root</entry>
         <entry key="jdbc.password">admin</entry>
 </properties>
