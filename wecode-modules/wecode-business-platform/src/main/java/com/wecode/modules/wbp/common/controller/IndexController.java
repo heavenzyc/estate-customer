@@ -38,7 +38,7 @@ public class IndexController extends BaseController{
             return;
         } else {
             getSession().setAttribute("operator",username);
-            renderTop("/input/index");
+            renderTop("/client/index");
             return;
         }
     }
