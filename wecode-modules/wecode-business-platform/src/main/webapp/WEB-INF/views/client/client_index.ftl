@@ -13,27 +13,21 @@
             <div class="space-6"></div>
             <div class="clearfix">
                 <div class="pull-left text-left clearfix" style="margin-left:20px;">
-                    <label class="pull-left" style="margin-top:5px">入库时间：</label>
+                    <label class="pull-left" style="margin-top:5px">状态：</label>
                     <div class="pull-left" style="margin-right:30px;">
-                        <div class="input-group" style="width:250px; margin-left:0px;">
-                            <span class="input-group-addon">
-                                <i class="icon-calendar bigger-110"></i>
-                            </span>
-                            <input class="form-control" type="text" name="date-range-picker" id="id-date-range-picker-1" value="" start="" end="">
-                        </div>
+                    <select class="" id="process_state" name="process_state" onchange="searchSub()">
+                        <option value="ALL">全部</option>
+                        <option value="NOT">未联系</option>
+                        <option value="DONE">已联系</option>
+                        <option value="SOLD">已出售</option>
+                    </select>
                     </div>
-                    <label class="pull-left" style="margin-top:5px">运输人：</label>
+
+                    <label class="pull-left" style="margin-top:5px">关键字：</label>
                     <div class="pull-left" style="margin-right:30px;">
-                        <input id="transport" name="transport" type="text" class="" placeholder="">
+                        <input id="key" name="key" type="text" class="" placeholder="输入姓名或电话">
                     </div>
-                    <label class="pull-left" style="margin-top:5px">收货人：</label>
-                    <div class="pull-left" style="margin-right:30px;">
-                        <input id="accepter" name="accepter" type="text" class="" placeholder="">
-                    </div>
-                    <label class="pull-left" style="margin-top:5px">过磅人：</label>
-                    <div class="pull-left">
-                        <input id="weighter" name="weighter" type="text" class="" placeholder="">
-                    </div>
+
                     <span class="pull-left" style="margin:3px 0 0 10px;">
                         <button id="find_btn" type="button" class="btn btn-purple btn-sm" style="position: relative; padding:2px 8px; top:-2px">
                             查询
@@ -61,39 +55,17 @@
 <script>
 
     $(function () {
-        var myDate = new Date();
-        var yesterday = myDate.getFullYear()+'/'+(myDate.getMonth() + 1)+'/'+(myDate.getDay());
-        var today = myDate.getFullYear()+'/'+(myDate.getMonth() + 1)+'/'+(myDate.getDay()+1);
-        $('input[name=date-range-picker]').daterangepicker({
-            format: 'YYYY/MM/DD',
-            startDate: yesterday,
-            endDate: today
-        },function(start, end, label) {
-            start = start.format('YYYY/MM/DD');
-            end = end.format('YYYY/MM/DD');
-            $("#id-date-range-picker-1").attr("start",start);
-            $("#id-date-range-picker-1").attr("end",end);
-        });
         $("#find_btn").click(function(){
             searchSub();
         });
     });
 
     function searchSub(){
-        var transport = $("#transport").val();
-        var accepter = $("#accepter").val();
-        var weighter = $("#weighter").val();
-        var range = $("#id-date-range-picker-1").val();
-        var start = ""  ;
-        var end = ""  ;
-        if(range.length>0){
-            range = range.split("-");
-            start = range[0];
-            end = range[1];
-        }
+        var key = $("#key").val();
+        var process_state = $("#process_state").val();
         $("#grid-table").jqGrid('setGridParam',{
-            url:"/input/list",
-            postData:{transport:transport,accepter:accepter,weighter:weighter,start:start,end:end}
+            url:"/client/list",
+            postData:{key:key,process_state:process_state}
         }).trigger("reloadGrid");
     }
 
@@ -101,40 +73,37 @@
         var pager_selector = "#grid-pager";
         var table = $("#grid-table");
         table.jqGrid({
-            url : "/input/list",
+            url : "/client/list",
             datatype : "json",
             mtype : 'get',
             height : 380,
-            caption:'入  库  单（带过磅单）',
+            caption:'客户信息',
             rownumbers: true,
             scrollOffset:1,
             colModel :
                     [
-                        {name : 'id',index : 'id',hidden : true,width :0,sorttype : "int",editable : false},
-                        {name : 'code',label:'入库单号',index :'code',width :10,sorttype : "int",editable : false},
-                        {name : 'merchant_name',label:'供货单位',index :'id',width :10,sorttype : "int",editable : false},
-                        {name : 'send_person',label:'发货人',index :'id',width :10,sorttype : "int",editable : false},
-                        {name : 'material_name',index : 'id',label:'物品名称',width :10,editable : false},
-                        {name : 'input_time',index :'reserve_time',label:'入库日期', width : 10,editable : false,formatter:"date",formatoptions: {srcformat:'Y-m-d',newformat:'Y-m-d'}},
-                        {name : 'purchase_type_name',index : 'consultant_name',label:'类别',width : 10,editable : false},
-                        {name : 'standard_name',index : 'consultant_name',label:'规格',width : 10,editable : false},
-                        {name : 'price',index : 'price',label:'单价/（单位）',width : 10,editable : false, formatter:function(value,opt,rDate){
-                            return rDate.price+"元/"+rDate.unit;
-                        }},
-                        {name : 'count',index : 'consultant_name',label:'数量',width : 10,editable : false},
-                        {name : 'money',index : 'consultant_name',label:'总额',width : 10,editable : false},
-                        {name : 'warehouse',index : 'consultant_name',label:'所入仓库',width : 10,editable : false},
-                        {name : 'accept_person',index : 'accept_person',label:'收货人',width : 6,editable : false},
-                        {name : 'weigh_person',index : 'consultant_name',label:'过磅人',width : 6,editable : false},
-                        {name : 'transport_person',index : 'consultant_name',label:'运输人',width : 6,editable : false},
-                        {name : 'car_num',index : 'consultant_name',label:'司机车号',width : 6,editable : false},
-                        {name : 'id',index : 'id',label:'操作',width : 150,fixed : true,sortable : false,resize : false,formatter : function(value, options, rData){
-                            var html = '';
-                            if (rData.type == 'ADD') {
-                                html += '<a class="btn no-border btn-minier btn-primary process" href="/input/update/'+value+'">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+                        {name : 'id',index : 'id',hidden : true,width :0,sorttype : "int",editable : false, fixed:false},
+                        {name : 'name',label:'姓名',index :'name',sorttype : "int",editable : false, fixed:false},
+                        {name : 'phone',label:'电话',index :'phone',sorttype : "int",editable : false, fixed:false},
+                        {name : 'qq',label:'QQ',index :'qq',sorttype : "int",editable : false, fixed:false},
+                        {name : 'park_name',index : 'park_name',label:'小区名称',editable : false, fixed:false},
+                        {name : 'house_name',index :'house_name',label:'房号',editable : false, fixed:false},
+                        {name : 'process_state',index :'process_state',label:'处理状态',editable : false, fixed:false,formatter:function(value){
+                            if (value == 'NOT'){
+                              return '<span class="label label-sm label-primary arrowed arrowed-right">未联系</span>';
                             }
+                            if (value == 'DONE') {
+                                return '<span class="label label-sm label-success arrowed arrowed-right">已联系</span>';
+                            }
+                            if (value == 'SOLD') {
+                                return '<span class="label label-sm label-danger arrowed arrowed-right">已出售</span>';
+                            }
+                        }},
+                        {name : 'id',index : 'id',label:'操作',fixed : false,sortable : false,resize : false,formatter : function(value, options, rData){
+                            var html = '';
+                            html += '<a class="btn no-border btn-minier btn-primary process" href="/client/update/'+value+'">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;';
                             html += '<button class="btn no-border btn-minier btn-warning process" onclick="deleteInfo('+value+')" >删除</button>&nbsp;&nbsp;&nbsp;&nbsp';
-                            html += '<a class="btn no-border btn-minier btn-primary process" target="_blank" href="/input/print/'+value+'">打印</a>';
+                            html += '<a class="btn no-border btn-minier btn-danger process" href="/client/update/'+value+'">处理</a>';
                             return html;
                         }}
                     ],
@@ -298,7 +267,7 @@
         bootbox.confirm("确定删除该数据吗?", function(result) {
             if(result) {
                 $.ajax({
-                    url:"/input/delete",
+                    url:"/client/delete",
                     async: false,
                     type:'GET',
                     data:{id:id},
