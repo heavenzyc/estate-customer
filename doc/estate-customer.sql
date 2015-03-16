@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50528
 File Encoding         : 65001
 
-Date: 2015-03-13 17:27:28
+Date: 2015-03-16 18:07:44
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,16 +30,19 @@ CREATE TABLE `client` (
   `house_name` varchar(50) DEFAULT NULL COMMENT '房号(5栋一单元801）',
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
+  `remark` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='客户表';
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='客户表';
 
 -- ----------------------------
 -- Records of client
 -- ----------------------------
-INSERT INTO `client` VALUES ('1', '三胖子', '13200903495', '34895489', 'VALID', 'NOT', '天府名居', '1栋1单元101', '2015-03-13 15:37:19', null);
-INSERT INTO `client` VALUES ('2', '死胖子', '18900930092', '23423423', 'VALID', 'SOLD', '天府名居', '1栋1单元102', '2015-03-13 15:44:27', null);
-INSERT INTO `client` VALUES ('3', '大胖子', '18234389094', '234353048', 'VALID', 'DONE', '天府名居', '1栋1单元103', '2015-03-13 16:36:20', null);
-INSERT INTO `client` VALUES ('4', '金三胖', '15634324323', '23452340', 'VALID', 'NOT', '天府名居', '1栋1单元104', '2015-03-13 16:37:02', null);
+INSERT INTO `client` VALUES ('1', '三胖子', '13200903495', '34895489', 'VALID', 'NOT', '天府名居', '1栋1单元101', '2015-03-13 15:37:19', null, null);
+INSERT INTO `client` VALUES ('2', '死胖子', '18900930092', '23423423', 'VALID', 'SOLD', '天府名居', '1栋1单元102', '2015-03-13 15:44:27', null, null);
+INSERT INTO `client` VALUES ('3', '大胖子', '18234389094', '234353048', 'VALID', 'DONE', '天府名居', '1栋1单元103', '2015-03-13 16:36:20', null, null);
+INSERT INTO `client` VALUES ('4', '金三胖', '15634324323', '23452340', 'VALID', 'NOT', '天府名居', '1栋1单元104', '2015-03-13 16:37:02', null, null);
+INSERT INTO `client` VALUES ('14', '奥巴马', '18088888888', '1234098', 'VALID', 'NOT', '天堂小区', '1栋1单元111', '2015-03-16 16:38:23', null, '咋还没联系');
+INSERT INTO `client` VALUES ('15', '普金', '19099999999', '2345234', 'VALID', 'DONE', '地狱小区', '0栋0单元000', '2015-03-16 16:38:23', null, '已经联系了');
 
 -- ----------------------------
 -- Table structure for house

@@ -5,87 +5,36 @@
     <div class="row">
         <div class="col-sm-12 col-md-8" >
             <!-- PAGE CONTENT BEGINS -->
-            <div class="clearfix form-actions">
-                <div class="col-md-offset-2 col-md-9" style="font-size: 24px">
-                    入  库  单
-                </div>
-            </div>
-            <form id="add_input_info" class="form-horizontal" houseType="form" action="/input/modify" method="post">
+            <form id="edit_client_info" class="form-horizontal" houseType="form" action="/client/modify" method="post">
                 <input type="hidden" name="id" value="${data.id}"/>
-                <input type="hidden" id="senderId" value="${data.send_person_id}"/>
-                <input type="hidden" id="accepterId" value="${data.accept_person_id}"/>
                 <div class="form-group"  >
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">项目工程名</label>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">姓名</label>
                     <div class="col-sm-10">
-                        <input type="text" id="project_name" class="col-xs-10 col-sm-5" name="project_name" value="${data.project_name}" maxlength="50"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">供货单位</label>
-                    <div class="col-sm-10">
-                        <select class="width-40 chosen-select" id="provideMerchant" data-placeholder="请选择..." name="merchant_id" onchange="getSender()">
-                            <#list providers as provide>
-                                <option value="${provide.id}" <#if provide.id==data.merchant_id>selected</#if>>${provide.name}</option>
-                            </#list>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">物品名称</label>
-                    <div class="col-sm-10">
-                        <select class="width-40 chosen-select" id="material" data-placeholder="请选择..." name="material_id" onchange="getUnit()">
-                            <#list materials as mat>
-                                <option value="${mat.id}" <#if mat.id==data.material_id>selected</#if>>${mat.name}</option>
-                            </#list>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">数量</label>
-                    <div class="col-sm-10">
-                        <input type="text" id="count" class="col-xs-10 col-sm-5" name="count" value="${data.count}" maxlength="10" datatype="s2-20" nullmsg="请输入数量"/>
-                        <label id="unit">${data.unit}</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">发货人</label>
-                    <div class="col-sm-10" id="senderDiv"></div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">收货人</label>
-                    <div class="col-sm-10" id="accepterDiv">
-                        <select class="width-40 chosen-select" data-placeholder="请选择..." name="accept_person_id">
-                            <#list staffs as ac>
-                                <option value="${ac.id}" <#if ac.id==data.accept_person_id>selected</#if> >${ac.name}</option>
-                            </#list>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group"  >
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">所入仓库</label>
-                    <div class="col-sm-10">
-                        <input type="text" id="structure" class="col-xs-10 col-sm-5" name="warehouse" value="${data.warehouse}" maxlength="50" nullmsg="请输入户型结构" datatype="s"/>
+                        <input type="text" id="name" class="col-xs-10 col-sm-5" name="name" value="${data.name}" maxlength="10" placeholder=""/>
                     </div>
                 </div>
                 <div class="form-group"  >
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">运输人</label>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">电话</label>
                     <div class="col-sm-10">
-                        <input type="text" id="transport_person" class="col-xs-10 col-sm-5" name="transport_person" value="${data.transport_person}" maxlength="20"/>
+                        <input type="text" id="phone" class="col-xs-10 col-sm-5" name="phone" value="${data.phone}" maxlength="30" placeholder="电话"/>
                     </div>
                 </div>
                 <div class="form-group"  >
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">司机车号</label>
-
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">QQ</label>
                     <div class="col-sm-10">
-                        <input type="text" id="car_num"  class="col-xs-10 col-sm-5" name="car_num" value="${data.car_num}" maxlength="20"/>
+                        <input type="text" id="qq" class="col-xs-10 col-sm-5" name="qq" value="${data.qq}" maxlength="10" placeholder=""/>
                     </div>
                 </div>
                 <div class="form-group"  >
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">过磅人</label>
-
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">小区名称</label>
                     <div class="col-sm-10">
-                        <input type="text" id="weigh_person"  class="col-xs-10 col-sm-5" name="weigh_person" value="${data.weigh_person}" maxlength="20"/>
+                        <input type="text" id="park_name" class="col-xs-10 col-sm-5" name="park_name" value="${data.park_name}" maxlength="30" placeholder=""/>
+                    </div>
+                </div>
+                <div class="form-group"  >
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">房屋地址</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="house_name" class="col-xs-10 col-sm-5" name="house_name" value="${data.house_name}" maxlength="30" placeholder="例如：1栋1单元101"/>
                     </div>
                 </div>
                 <div class="form-group"  >
@@ -117,11 +66,12 @@
 <script type="text/javascript">
 
     $(function(){
-        $(".chosen-select").chosen();
-
         // 验证插件
-        $("#add_input_info").validity(function(){
-            $("#count").require("请输入价格").match("number");
+        $("#edit_client_info").validity(function(){
+            $("#name").require("请输入姓名");
+            $("#phone").require("请输入电话号码");
+            $("#park_name").require("请输入小区名称");
+            $("#house_name").require("请输入房号");
         });
     })
 

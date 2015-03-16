@@ -5,12 +5,35 @@
     <div class="row">
         <div class="col-sm-12 col-md-8" >
             <!-- PAGE CONTENT BEGINS -->
-            <form id="add_input_info" class="form-horizontal" houseType="form" action="/client/save" method="post">
+            <form id="add_client_info" class="form-horizontal" houseType="form" action="/client/save" method="post">
                 <div class="form-group"  >
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">项目工程名</label>
-
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">姓名</label>
                     <div class="col-sm-10">
-                        <input type="text" id="project_name" class="col-xs-10 col-sm-5" name="project_name" maxlength="50"/>
+                        <input type="text" id="name" class="col-xs-10 col-sm-5" name="name" maxlength="10" placeholder=""/>
+                    </div>
+                </div>
+                <div class="form-group"  >
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">电话</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="phone" class="col-xs-10 col-sm-5" name="phone" maxlength="30" placeholder="电话"/>
+                    </div>
+                </div>
+                <div class="form-group"  >
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">QQ</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="qq" class="col-xs-10 col-sm-5" name="qq" maxlength="10" placeholder=""/>
+                    </div>
+                </div>
+                <div class="form-group"  >
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">小区名称</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="park_name" class="col-xs-10 col-sm-5" name="park_name" maxlength="30" placeholder=""/>
+                    </div>
+                </div>
+                <div class="form-group"  >
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">房屋地址</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="house_name" class="col-xs-10 col-sm-5" name="house_name" maxlength="30" placeholder="例如：1栋1单元101"/>
                     </div>
                 </div>
                 <div class="form-group"  >
@@ -42,47 +65,16 @@
 <script type="text/javascript">
 
     $(function(){
-        $(".chosen-select").chosen();
+//        $(".chosen-select").chosen();
 
         // 验证插件
-        $("#add_input_info").validity(function(){
-            $("#count").require("请输入价格").match("number");
+        $("#add_client_info").validity(function(){
+            $("#name").require("请输入姓名");
+            $("#phone").require("请输入电话号码");
+            $("#park_name").require("请输入小区名称");
+            $("#house_name").require("请输入房号");
         });
-        getSender();
-        getUnit();
     })
-
-    function getSender(){
-        var id = $("#provideMerchant").val();
-        $.ajax({
-            url:'/input/getSendPersons',
-            type:'get',
-            data:{merchantId:id},
-            success:function(json){
-                var data = json.data;
-                $("#senderDiv").empty();
-                var html = '<select class="width-40 chosen-select" data-placeholder="请选择..." name="send_person_id">'
-                for(var i=0; i<data.length; i++) {
-                    html += "<option value="+data[i].id+">"+data[i].name+"</option>";
-                }
-                html += "</select>"
-                $("#senderDiv").append(html);
-                $(".chosen-select").chosen();
-            }
-        });
-    }
-
-    function getUnit(){
-        var id = $("#material").val();
-        $.ajax({
-            url:'/input/getUnit',
-            type:'get',
-            data:{material:id},
-            success:function(json){
-                $("#unit").html("").html(json);
-            }
-        });
-    }
 
 </script>
 

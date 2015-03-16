@@ -16,6 +16,32 @@ public class Client extends BaseModel<Client,Integer> {
 
     public static Client dao = new Client();
 
+    public static enum PROCESS_STATE {
+        NOT("未联系"), DONE("已联系"), SOLD("已出售");
+        public String value;
+
+        PROCESS_STATE(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return this.value;
+        }
+
+        public static PROCESS_STATE indexOf(int i) {
+            PROCESS_STATE[] statusList = PROCESS_STATE.values();
+            if (i < 0 || i >= statusList.length) {
+                return statusList[0];
+            }
+            return statusList[i];
+        }
+    }
+
+    public PROCESS_STATE getProcessState() {
+        String i = getStr("process_state");
+        return PROCESS_STATE.valueOf(i);
+    }
+
     public static Page<Client> getPage(Integer curPage, Integer pageSize, String key, String process_state) {
         String sql = " select * ";
         String sqlExceptSelect = " from client where 1=1 and status='VALID' ";
@@ -32,5 +58,10 @@ public class Client extends BaseModel<Client,Integer> {
         }
         sqlExceptSelect += " order by create_time desc ";
         return dao.paginate(curPage,pageSize,sql,sqlExceptSelect,params.toArray());
+    }
+
+    public static List<Client> getList(){
+        String sql = " select * from client where status='VALID' ";
+        return dao.find(sql);
     }
 }

@@ -4,8 +4,8 @@
 <div class="page-content">
     <div class="page-header">
         <button class="btn btn-primary JS_improt">导入数据</button>
-        <a class="btn btn-danger" href="/input/exportExcel">导出数据</a>
-        <a class="btn btn-success" href="/input/add">添加数据</a>
+        <a class="btn btn-danger" href="/client/exportExcel">导出数据</a>
+        <a class="btn btn-success" href="/client/add">添加数据</a>
     </div>
 
     <div class="row">
@@ -77,7 +77,7 @@
             datatype : "json",
             mtype : 'get',
             height : 380,
-            caption:'客户信息',
+//            caption:'客户信息',
             rownumbers: true,
             scrollOffset:1,
             colModel :
@@ -101,9 +101,10 @@
                         }},
                         {name : 'id',index : 'id',label:'操作',fixed : false,sortable : false,resize : false,formatter : function(value, options, rData){
                             var html = '';
+                            html += '<a class="btn no-border btn-minier btn-danger process" href="/client/update/'+value+'">处理</a>&nbsp;&nbsp;&nbsp;&nbsp;';
                             html += '<a class="btn no-border btn-minier btn-primary process" href="/client/update/'+value+'">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-                            html += '<button class="btn no-border btn-minier btn-warning process" onclick="deleteInfo('+value+')" >删除</button>&nbsp;&nbsp;&nbsp;&nbsp';
-                            html += '<a class="btn no-border btn-minier btn-danger process" href="/client/update/'+value+'">处理</a>';
+                            html += '<button class="btn no-border btn-minier btn-warning process" onclick="deleteInfo('+value+')" >删除</button>';
+
                             return html;
                         }}
                     ],
@@ -227,7 +228,7 @@
                 $(".Js_confirm").on("click", function(){
                     //showSelectWordpic($this)
                     $.ajaxFileUpload({
-                        url:'/input/importExcel',
+                        url:'/client/importExcel',
                         type:'post',
                         fileElementId:'id-input-file-2',
                         dataType:'text',
@@ -275,6 +276,8 @@
                         if(json.success) {
                             $("#grid-table").trigger("reloadGrid");
                             showToast("删除成功！");
+                        }else{
+                            showToast("网络连接失败，请稍后重试！");
                         }
                     }
                 });
