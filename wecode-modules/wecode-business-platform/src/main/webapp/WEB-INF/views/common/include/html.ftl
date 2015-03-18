@@ -29,6 +29,9 @@
     <link rel="stylesheet" href="/assets/css/ace-skins.min.css" />
     <link rel="stylesheet" href="/assets/js/jquery.validity/jquery.validity.css" />
     <link rel="stylesheet" href="/assets/js/qTip2/jquery.qtip.min.css" />
+    <link rel="stylesheet" href="/assets/css/colorbox.css"/>
+    <link rel="stylesheet" href="/assets/css/uploadify.css"/>
+    <link rel="stylesheet" href="/assets/css/jquery.Jcrop.css"/>
     <!--[if lte IE 8]>
     <link rel="stylesheet" href="/assets/css/ace-ie.min.css" />
     <![endif]-->
@@ -80,6 +83,11 @@
     <script src="/assets/js/jquery.gritter.min.js"></script>
     <script src="/assets/js/ajaxfileupload.js"></script>
     <script src="/assets/js/bootbox.min.js"></script>
+    <script src="/assets/js/jquery.colorbox-min.js"></script>
+    <script src="/assets/js/jquery.uploadify.js"></script>
+    <script src="/assets/js/jquery.Jcrop.min.js"></script>
+    <script src="/assets/js/uploadavatar.js"></script>
+    <script src="/assets/js/upload.config.js"></script>
 <#--############################################################-->
     <!--[if lte IE 8]>
     <script src="/assets/js/excanvas.min.js"></script>

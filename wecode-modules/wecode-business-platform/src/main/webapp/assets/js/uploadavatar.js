@@ -42,7 +42,7 @@ var UploadAvatar = function(obj, pbox, crop, callback) {
 		'height' : 32,
 		'multi' : false,
 		'swf' : '/assets/js/uploadimg/uploadify.swf', //上传组件
-		'uploader' : '/admin/file/uploadCropImg',
+		'uploader' : '/client/file/uploadCropImg',
 		'onSelect' : function(file) {
 			//alert('The file ' + file.name + ' was added to the queue.');
 		},
@@ -232,7 +232,7 @@ var UploadAvatar = function(obj, pbox, crop, callback) {
 			if (_cr) {
 				$(".Js_avatar_confirm").addClass("disable").text("保存中").off("click", saveAvatar)
 				$.ajax({
-					url : "/admin/file/cropImg",
+					url : "/client/file/cropImg",
 					dataType : "json",
 					type : "POST",
 					data : $("#cropform").serialize(),

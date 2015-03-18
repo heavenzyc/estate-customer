@@ -17,6 +17,7 @@ import com.jfinal.render.ViewType;
 import com.wecode.framework.ext.jfinal.config.BaseConfig;
 import com.wecode.framework.ext.jfinal.db.MysqlDialectExt;
 import com.wecode.framework.ext.jfinal.handler.SessionHandler;
+import com.wecode.modules.wbp.common.controller.FileController;
 import com.wecode.modules.wbp.common.ext.freemarker.FreemarkerKit;
 import com.wecode.modules.wbp.common.interceptor.ExceptionInterceptor;
 import freemarker.template.TemplateModelException;
@@ -75,6 +76,8 @@ public class SysConfig extends BaseConfig {
         // 自动扫描 建议用注解
         AutoBindRoutes autoBindRoutes = new AutoBindRoutes();
         me.add(autoBindRoutes.autoScan(false));
+        //图片上传
+        me.add("/client/file", FileController.class);
     }
 
     @Override

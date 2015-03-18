@@ -48,7 +48,8 @@ public class Client extends BaseModel<Client,Integer> {
         List<String> params = new ArrayList<String>();
         if (StringUtils.isNotBlank(key)) {
             key = "%"+key+"%";
-            sqlExceptSelect += " and (name like ? or phone like ?) ";
+            sqlExceptSelect += " and (name like ? or phone like ? or park_name like ? ) ";
+            params.add(key);
             params.add(key);
             params.add(key);
         }
@@ -63,5 +64,10 @@ public class Client extends BaseModel<Client,Integer> {
     public static List<Client> getList(){
         String sql = " select * from client where status='VALID' ";
         return dao.find(sql);
+    }
+
+    public static List<FileInfo> getPics(Integer id){
+        String sql = "select * from file_info where obj_id=? and status='VALID'";
+        return FileInfo.dao.find(sql,id);
     }
 }

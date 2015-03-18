@@ -25,7 +25,7 @@
 
                     <label class="pull-left" style="margin-top:5px">关键字：</label>
                     <div class="pull-left" style="margin-right:30px;">
-                        <input id="key" name="key" type="text" class="" placeholder="输入姓名或电话">
+                        <input id="key" name="key" type="text" class="width-100" placeholder="姓名/电话/小区名称">
                     </div>
 
                     <span class="pull-left" style="margin:3px 0 0 10px;">
@@ -83,7 +83,9 @@
             colModel :
                     [
                         {name : 'id',index : 'id',hidden : true,width :0,sorttype : "int",editable : false, fixed:false},
-                        {name : 'name',label:'姓名',index :'name',sorttype : "int",editable : false, fixed:false},
+                        {name : 'name',label:'姓名',index :'name',sorttype : "int",editable : false, fixed:false,formatter:function(value, options, rData){
+                            return '<a href="/client/album/'+rData.id+'">'+value+'</a>'
+                        }},
                         {name : 'phone',label:'电话',index :'phone',sorttype : "int",editable : false, fixed:false},
                         {name : 'qq',label:'QQ',index :'qq',sorttype : "int",editable : false, fixed:false},
                         {name : 'park_name',index : 'park_name',label:'小区名称',editable : false, fixed:false},
@@ -99,11 +101,12 @@
                                 return '<span class="label label-sm label-danger arrowed arrowed-right">已出售</span>';
                             }
                         }},
-                        {name : 'id',index : 'id',label:'操作',fixed : false,sortable : false,resize : false,formatter : function(value, options, rData){
+                        {name : 'id',index : 'id',label:'操作',fixed : true,width:200,sortable : false,resize : false,formatter : function(value, options, rData){
                             var html = '';
-                            html += '<a class="btn no-border btn-minier btn-danger process" href="/client/update/'+value+'">处理</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-                            html += '<a class="btn no-border btn-minier btn-primary process" href="/client/update/'+value+'">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-                            html += '<button class="btn no-border btn-minier btn-warning process" onclick="deleteInfo('+value+')" >删除</button>';
+                            html += '<button class="btn no-border btn-minier btn-danger Js_process" onclick="show_process('+value+',\''+rData.process_state+'\',\''+rData.process_remark+'\')">处理</button>&nbsp;&nbsp;&nbsp;&nbsp;';
+                            html += '<a class="btn no-border btn-minier btn-primary" href="/client/update/'+value+'">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+                            html += '<a class="btn no-border btn-minier btn-pink" href="/client/album/'+value+'">相册</a>&nbsp;&nbsp;&nbsp;&nbsp;';
+                            html += '<button class="btn no-border btn-minier btn-warning" onclick="deleteInfo('+value+')" >删除</button>';
 
                             return html;
                         }}
@@ -251,9 +254,101 @@
         })
     });
 
+    /*$(document).on("click",".Js_fancybox_close",function(){
+        $.fancybox.close()
+    })*/
+
+    function show_process(id,state,process_remark){
+        var html = '<select class="width-60" id="process_state" name="process_state">';
+        if(state == 'NOT') {
+            html += '<option value="NOT" selected>未联系</option>';
+        }else {
+            html += '<option value="NOT">未联系</option>';
+        }
+        if(state == 'DONE') {
+            html += '<option value="DONE" selected>已联系</option>';
+        }else{
+            html += '<option value="DONE">已联系</option>';
+        }
+        if(state == 'SOLD') {
+            html += '<option value="SOLD" selected>已出售</option>';
+        }else {
+            html += '<option value="SOLD">已出售</option>';
+        }
+        html += '</select>';
+        var _html = [
+            '<div class="widget-box no-border">',
+            '	<div class="widget-header no-border">',
+            '		<h4>信息处理</h4>',
+            '	</div>',
+            '	<div class="widget-body no-border">',
+            '		<div class="widget-main no-padding">',
+            '			<div class="material-list-wrap" style="height:auto">',
+            '				<form id="process_form">',
+            '                   <input type="hidden" name="id" value="'+id+'" id="booking_id">',
+            '					<div class="space-10"></div>',
+            '					<div class="form-group clearfix">',
+            '						<label class="col-sm-3 control-label no-padding-right text-right" for="form-field-1"> 处理：</label>',
+            '						<div class="col-sm-9">',
+                                         html,
+            '						</div>',
+            '					</div>',
+            '					<div class="form-group clearfix">',
+            '						<label class="col-sm-3 control-label no-padding-right text-right" for="form-field-1"> 备注：</label>',
+            '						<div class="col-sm-9">',
+            '							<textarea name="process_remark" rows="5" cols="40">'+process_remark+'</textarea>',
+            '						</div>',
+            '					</div>',
+            '				</form>',
+            '			</div>',
+            '			<div class="form-actions center no-margin">',
+            '				<button type="button" class="btn btn-sm btn-success Js_confirm">',
+            '					<b>确定</b>',
+            '				</button>',
+            '				<button class="btn btn-sm btn-grey Js_fancybox_close">',
+            '					取消',
+            '				</button>',
+            '			</div>',
+            '		</div>',
+            '	</div>',
+            '</div>'].join("");
+
+        $.fancybox({
+            type : "html",
+            width : '600',
+            autoHeight : true,
+            autoSize : false,
+            padding : 0,
+            scrolling : 'auto',
+            content: _html,
+            afterShow : function(){
+                $(".Js_confirm").on("click", function(){
+                    var data = $("#process_form").serialize();
+                    $.ajax({
+                        url:'/client/process',
+                        type:'post',
+                        data:data,
+                        success:function(json){
+                            if(json.success){
+                                showToast("处理成功！");
+                                $("#grid-table").trigger("reloadGrid");
+                            }else{
+                                showToast("处理失败！");
+                            }
+                            $.fancybox.close();
+                        }
+                    });
+                });
+            },
+            afterClose: function(){
+                $(".Js_confirm").off("click");
+            }
+        })
+    }
+
     $(document).on("click",".Js_fancybox_close",function(){
         $.fancybox.close()
-    })
+    });
 
     function showToast(text,title,time){
         $.gritter.add({

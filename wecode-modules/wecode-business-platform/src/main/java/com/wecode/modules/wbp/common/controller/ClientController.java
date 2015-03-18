@@ -9,6 +9,7 @@ import com.wecode.framework.json.JsonResult;
 import com.wecode.framework.util.DateUtils;
 import com.wecode.framework.util.StringUtils;
 import com.wecode.modules.wbp.common.model.Client;
+import com.wecode.modules.wbp.common.model.FileInfo;
 import com.wecode.modules.wbp.common.model.Status;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -101,6 +102,22 @@ public class ClientController extends BaseController {
     }
 
     @Before(Tx.class)
+    public void process(){
+        Integer id = getParaToInt("id");
+        String process_state = getPara("process_state");
+        String process_remark = getPara("process_remark");
+        Client client = Client.dao.findById(id);
+        if (client != null) {
+            client.set("process_state",process_state);
+            client.set("process_remark",process_remark);
+            client.update();
+            renderJson(JsonResult.success());
+        } else {
+            renderJson(JsonResult.fail());
+        }
+    }
+
+    @Before(Tx.class)
     public void delete(){
         Integer id = getParaToInt("id");
         Client client = Client.dao.findById(id);
@@ -112,6 +129,27 @@ public class ClientController extends BaseController {
             renderJson(JsonResult.fail());
         }
 
+    }
+
+    public void album(){
+        Integer id = getParaToInt();
+        List<FileInfo> data = Client.getPics(id);
+        setAttr("data",data);
+        setAttr("id",id);
+        renderFreeMarker("album_info.ftl");
+    }
+
+    @Before(Tx.class)
+    public void deletePic(){
+        Integer picId = getParaToInt("picId");
+        FileInfo file = FileInfo.dao.findById(picId);
+        if (file != null) {
+            file.set("status",Status.INVALID.name());
+            file.update();
+            renderJson(JsonResult.success());
+        } else {
+            renderJson(JsonResult.fail());
+        }
     }
 
     public void importExcel(){
