@@ -25,6 +25,14 @@
                 </ul>
             </div>
             <div class="clearfix"></div>
+            <div class="clearfix form-actions">
+                <div class=" col-md-9">
+                    <a href="javascript:history.back()" class="btn" type="reset">
+                        <i class="icon-undo bigger-110"></i>
+                        返回
+                    </a>
+                </div>
+            </div>
             <!-- PAGE CONTENT ENDS -->
         </div><!-- /.col -->
 
