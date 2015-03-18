@@ -190,7 +190,7 @@
 
         <ul class="submenu">
             <li>
-                <a href="/input">
+                <a href="/client">
                     <i class="icon-double-angle-right"></i>
                     客户列表
                 </a>
