@@ -42,7 +42,8 @@ public class Client extends BaseModel<Client,Integer> {
         return PROCESS_STATE.valueOf(i);
     }
 
-    public static Page<Client> getPage(Integer curPage, Integer pageSize, String key, String process_state) {
+    public static Page<Client> getPage(Integer curPage, Integer pageSize, String key, String process_state,
+                                       String park_name,String building,String unit,String floor,String num) {
         String sql = " select * ";
         String sqlExceptSelect = " from client where 1=1 and status='VALID' ";
         List<String> params = new ArrayList<String>();
@@ -56,6 +57,26 @@ public class Client extends BaseModel<Client,Integer> {
         if (StringUtils.isNotBlank(process_state) && !"ALL".equals(process_state)) {
             sqlExceptSelect += " and process_state=? ";
             params.add(process_state);
+        }
+        if (StringUtils.isNotBlank(park_name)) {
+            sqlExceptSelect += " and park_name=? ";
+            params.add(park_name);
+        }
+        if (StringUtils.isNotBlank(building)) {
+            sqlExceptSelect += " and building=? ";
+            params.add(building);
+        }
+        if (StringUtils.isNotBlank(unit)) {
+            sqlExceptSelect += " and unit=? ";
+            params.add(unit);
+        }
+        if (StringUtils.isNotBlank(floor)) {
+            sqlExceptSelect += " and floor=? ";
+            params.add(floor);
+        }
+        if (StringUtils.isNotBlank(num)) {
+            sqlExceptSelect += " and num=? ";
+            params.add(num);
         }
         sqlExceptSelect += " order by create_time desc ";
         return dao.paginate(curPage,pageSize,sql,sqlExceptSelect,params.toArray());

@@ -6,11 +6,11 @@ import com.jfinal.kit.JsonKit;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.wecode.framework.json.JsonResult;
-import com.wecode.framework.util.DateUtils;
 import com.wecode.framework.util.StringUtils;
 import com.wecode.modules.wbp.common.model.Client;
 import com.wecode.modules.wbp.common.model.FileInfo;
 import com.wecode.modules.wbp.common.model.Status;
+import com.wecode.modules.wbp.common.model.Track;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -39,8 +39,14 @@ public class ClientController extends BaseController {
 
     public void list(){
         String key = getPara("key");
+        String park_name = getPara("park_name");
+        String building = getPara("building");
+        String unit = getPara("unit");
+        String floor = getPara("floor");
+        String num = getPara("num");
         String process_state = getPara("process_state");
-        Page<Client> page = Client.getPage(getParaToInt("page", 1),getParaToInt("rows", 10),key,process_state);
+        Page<Client> page = Client.getPage(getParaToInt("page", 1),getParaToInt("rows", 10),key,
+                process_state,park_name,building,unit,floor,num);
         Map root = new HashMap();
         root.put("total", page.getTotalPage());
         root.put("page", page.getPageNumber());
@@ -82,6 +88,11 @@ public class ClientController extends BaseController {
         String park_name = getPara("park_name");
         String house_name = getPara("house_name");
         String remark = getPara("remark");
+        String building = getPara("building");
+        String unit = getPara("unit");
+        String floor = getPara("floor");
+        String num = getPara("num");
+        String area = getPara("area");
         Client client = null;
         if (id == null) {
             client = new Client();
@@ -96,8 +107,13 @@ public class ClientController extends BaseController {
         client.set("phone",phone);
         client.set("qq",qq);
         client.set("park_name",park_name);
-        client.set("house_name",house_name);
+        client.set("house_name",building+"栋"+unit+"单元"+num);
         client.set("remark",remark);
+        client.set("building",building);
+        client.set("unit",unit);
+        client.set("floor",floor);
+        client.set("num",num);
+        client.set("area",area);
         return client;
     }
 
@@ -117,6 +133,41 @@ public class ClientController extends BaseController {
         }
     }
 
+    public void info(){
+        Integer id = getParaToInt();
+        Client client = Client.dao.findById(id);
+        List<Track> tracks = Track.getList(id);
+        List<FileInfo> pics = Client.getPics(id);
+        setAttr("pics",pics);
+        setAttr("data",client);
+        setAttr("tracks",tracks);
+        renderFreeMarker("client_track.ftl");
+    }
+
+    @Before(Tx.class)
+    public void track(){
+        Integer id = getParaToInt("id");
+        String process_state = getPara("process_state");
+        String remark = getPara("remark");
+        Client client = Client.dao.findById(id);
+        if (client != null) {
+            client.set("process_state",process_state);
+            client.update();
+            Track track = new Track();
+            track.set("client_id",id);
+            track.set("remark",remark);
+            track.set("create_time",new Date());
+            track.save();
+            Map root = new HashMap();
+            root.put("data", track);
+            root.put("success",true);
+            renderJson(JsonKit.toJson(root));
+        } else {
+            JsonResult json = JsonResult.fail();
+            renderJson(json);
+        }
+    }
+
     @Before(Tx.class)
     public void delete(){
         Integer id = getParaToInt("id");
@@ -129,14 +180,6 @@ public class ClientController extends BaseController {
             renderJson(JsonResult.fail());
         }
 
-    }
-
-    public void album(){
-        Integer id = getParaToInt();
-        List<FileInfo> data = Client.getPics(id);
-        setAttr("data",data);
-        setAttr("id",id);
-        renderFreeMarker("album_info.ftl");
     }
 
     @Before(Tx.class)
@@ -182,54 +225,95 @@ public class ClientController extends BaseController {
                 if (name != null) {
                     client.set("name",getValue(name));
                 }
+                //楼盘
+                HSSFCell park_name = xssfRow.getCell(1);
+                if (park_name != null) {
+                    client.set("park_name",getValue(park_name));
+                }
+                //栋号
+                HSSFCell building = xssfRow.getCell(2);
+                if (building != null) {
+                    String buildingStr = getValue(building);
+                    if (StringUtils.isNotBlank(buildingStr)) {
+                        if (buildingStr.contains(".0")) {
+                            buildingStr = buildingStr.replace(".0","");
+                            client.set("building",buildingStr);
+                        }else {
+                            client.set("building",buildingStr);
+                        }
+                    }
+                }
+                //单元
+                HSSFCell unit = xssfRow.getCell(3);
+                if (unit != null) {
+                    String unitStr = getValue(unit);
+                    if (StringUtils.isNotBlank(unitStr)) {
+                        if (unitStr.contains(".0")) {
+                            unitStr = unitStr.replace(".0","");
+                            client.set("unit",unitStr);
+                        }else {
+                            client.set("unit",unitStr);
+                        }
+                    }
+                }
+                //楼层
+                HSSFCell floor = xssfRow.getCell(4);
+                if (floor != null) {
+                    String floorStr = getValue(floor);
+                    if (StringUtils.isNotBlank(floorStr)) {
+                        if (floorStr.contains(".0")) {
+                            floorStr = floorStr.replace(".0","");
+                            client.set("floor",floorStr);
+                        }else {
+                            client.set("floor",floorStr);
+                        }
+                    }
+                }
+                //房号
+                HSSFCell num = xssfRow.getCell(5);
+                if (num != null) {
+                    String numStr = getValue(num);
+                    if (StringUtils.isNotBlank(numStr)) {
+                        if (numStr.contains(".0")) {
+                            numStr = numStr.replace(".0","");
+                            client.set("num",numStr);
+                        }else {
+                            client.set("num",numStr);
+                        }
+                    }
+                }
+                //面积
+                HSSFCell area = xssfRow.getCell(6);
+                if (area != null) {
+                    client.set("area",getValue(area));
+                }
                 //电话
-                HSSFCell phone = xssfRow.getCell(1);
+                HSSFCell phone = xssfRow.getCell(7);
                 if (phone != null) {
                     String phoneStr = getValue(phone);
                     if (StringUtils.isNotBlank(phoneStr) && phoneStr.length() > 11) {
                         phoneStr = phoneStr.substring(0,phoneStr.length()-3).replace(".","");
                         client.set("phone",phoneStr);
+                    }else {
+                        client.set("phone",phoneStr);
                     }
                 }
-                //QQ号
-                HSSFCell qq = xssfRow.getCell(2);
-                if (qq != null) {
-                    String qqStr = getValue(qq);
-                    if (StringUtils.isNotBlank(qqStr)) {
-                        qqStr = qqStr.substring(0,qqStr.length()-3).replace(".","");
-                        client.set("qq",qqStr);
-                    }
-                }
-                //小区名称
-                HSSFCell park_name = xssfRow.getCell(3);
-                if (qq != null) {
-                    client.set("park_name",getValue(park_name));
-                }
-                //房号
-                HSSFCell house_name = xssfRow.getCell(4);
-                if (qq != null) {
-                    client.set("house_name",getValue(house_name));
-                }
-                //处理状态
-                HSSFCell process_state = xssfRow.getCell(5);
-                if (process_state != null) {
-                    String processState = getValue(process_state);
-                    if ("未联系".equals(processState) || "NOT".equals(processState)) {
-                        client.set("process_state", Client.PROCESS_STATE.NOT.name());
-                    }
-                    if ("已联系".equals(processState) || "DONE".equals(processState)) {
-                        client.set("process_state", Client.PROCESS_STATE.DONE.name());
-                    }
-                    if ("已出售".equals(processState) || "SOLD".equals(processState) || "已售出".equals(processState)) {
-                        client.set("process_state", Client.PROCESS_STATE.SOLD.name());
-                    }
-                }
-                //房号
-                HSSFCell remark = xssfRow.getCell(6);
+                //备注
+                HSSFCell remark = xssfRow.getCell(8);
                 if (remark != null) {
                     client.set("remark",getValue(remark));
                 }
                 //保存
+                StringBuffer house_name = new StringBuffer();
+                if (StringUtils.isNotBlank(client.getStr("building"))
+                        && StringUtils.isNotBlank(client.getStr("unit"))
+                        && StringUtils.isNotBlank(client.getStr("num"))){
+                    house_name.append(client.getStr("building"))
+                            .append("栋").append(client.getStr("unit"))
+                            .append("单元").append(client.getStr("num"));
+                }
+                client.set("house_name",house_name.toString());
+                client.set("process_state", "NOT");
                 client.set("status", Status.VALID.name());
                 client.set("create_time", new Date());
                 client.save();
@@ -264,58 +348,100 @@ public class ClientController extends BaseController {
                 if (name != null) {
                     client.set("name",getValue(name));
                 }
+                //楼盘
+                XSSFCell park_name = xssfRow.getCell(1);
+                if (park_name != null) {
+                    client.set("park_name",getValue(park_name));
+                }
+                //栋号
+                XSSFCell building = xssfRow.getCell(2);
+                if (building != null) {
+                    String buildingStr = getValue(building);
+                    if (StringUtils.isNotBlank(buildingStr)) {
+                        if (buildingStr.contains(".0")) {
+                            buildingStr = buildingStr.replace(".0","");
+                            client.set("building",buildingStr);
+                        }else {
+                            client.set("building",buildingStr);
+                        }
+                    }
+                }
+                //单元
+                XSSFCell unit = xssfRow.getCell(3);
+                if (unit != null) {
+                    String unitStr = getValue(unit);
+                    if (StringUtils.isNotBlank(unitStr)) {
+                        if (unitStr.contains(".0")) {
+                            unitStr = unitStr.replace(".0","");
+                            client.set("unit",unitStr);
+                        }else {
+                            client.set("unit",unitStr);
+                        }
+                    }
+                }
+                //楼层
+                XSSFCell floor = xssfRow.getCell(4);
+                if (floor != null) {
+                    String floorStr = getValue(floor);
+                    if (StringUtils.isNotBlank(floorStr)) {
+                        if (floorStr.contains(".0")) {
+                            floorStr = floorStr.replace(".0","");
+                            client.set("floor",floorStr);
+                        }else {
+                            client.set("floor",floorStr);
+                        }
+                    }
+                }
+                //房号
+                XSSFCell num = xssfRow.getCell(5);
+                if (num != null) {
+                    String numStr = getValue(num);
+                    if (StringUtils.isNotBlank(numStr)) {
+                        if (numStr.contains(".0")) {
+                            numStr = numStr.replace(".0","");
+                            client.set("num",numStr);
+                        }else {
+                            client.set("num",numStr);
+                        }
+                    }
+                }
+                //面积
+                XSSFCell area = xssfRow.getCell(6);
+                if (area != null) {
+                    client.set("area",getValue(area));
+                }
                 //电话
-                XSSFCell phone = xssfRow.getCell(1);
+                XSSFCell phone = xssfRow.getCell(7);
                 if (phone != null) {
                     String phoneStr = getValue(phone);
                     if (StringUtils.isNotBlank(phoneStr) && phoneStr.length() > 11) {
                         phoneStr = phoneStr.substring(0,phoneStr.length()-3).replace(".","");
                         client.set("phone",phoneStr);
-                    }
-                }
-                //QQ号
-                XSSFCell qq = xssfRow.getCell(2);
-                if (qq != null) {
-                    String qqStr = getValue(qq);
-                    if (StringUtils.isNotBlank(qqStr)) {
-                        qqStr = qqStr.substring(0,qqStr.length()-3).replace(".","");
-                        client.set("qq",qqStr);
-                    }
-                }
-
-                //小区名称
-                XSSFCell park_name = xssfRow.getCell(3);
-                if (qq != null) {
-                    client.set("park_name",getValue(park_name));
-                }
-                //房号
-                XSSFCell house_name = xssfRow.getCell(4);
-                if (qq != null) {
-                    client.set("house_name",getValue(house_name));
-                }
-                //处理状态
-                XSSFCell process_state = xssfRow.getCell(5);
-                if (process_state != null) {
-                    String processState = getValue(process_state);
-                    if ("未联系".equals(processState) || "NOT".equals(processState)) {
-                        client.set("process_state", Client.PROCESS_STATE.NOT.name());
-                    }
-                    if ("已联系".equals(processState) || "DONE".equals(processState)) {
-                        client.set("process_state", Client.PROCESS_STATE.DONE.name());
-                    }
-                    if ("已出售".equals(processState) || "SOLD".equals(processState) || "已售出".equals(processState)) {
-                        client.set("process_state", Client.PROCESS_STATE.SOLD.name());
+                    }else {
+                        client.set("phone",phoneStr);
                     }
                 }
                 //备注
-                XSSFCell remark = xssfRow.getCell(6);
+                XSSFCell remark = xssfRow.getCell(8);
                 if (remark != null) {
                     client.set("remark",getValue(remark));
                 }
                 //保存
+                StringBuffer house_name = new StringBuffer();
+                if (StringUtils.isNotBlank(client.getStr("building"))
+                        && StringUtils.isNotBlank(client.getStr("unit"))
+                        && StringUtils.isNotBlank(client.getStr("num"))){
+                    house_name.append(client.getStr("building"))
+                            .append("栋").append(client.getStr("unit"))
+                            .append("单元").append(client.getStr("num"));
+                }
+                client.set("house_name",house_name.toString());
+                client.set("process_state", "NOT");
                 client.set("status", Status.VALID.name());
                 client.set("create_time", new Date());
-                client.save();
+                if (StringUtils.isNotBlank(client.getStr("name")) && StringUtils.isNotBlank(client.getStr("phone"))){
+                    client.save();
+                }
             }
             JsonResult json = JsonResult.success();
             json.msg("导入成功!");

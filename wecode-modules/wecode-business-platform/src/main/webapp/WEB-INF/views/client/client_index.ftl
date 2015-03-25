@@ -24,8 +24,23 @@
                     </div>
 
                     <label class="pull-left" style="margin-top:5px">关键字：</label>
-                    <div class="pull-left" style="margin-right:30px;">
-                        <input id="key" name="key" type="text" class="width-100" placeholder="姓名/电话/小区名称">
+                    <div class="pull-left" style="margin-right:10px;">
+                        <input id="key" name="key" type="text" class="width-100" placeholder="姓名/电话">
+                    </div>
+                    <div class="pull-left" style="margin-right:10px;">
+                        <input id="park_name" name="park_name" type="text" class="width-100" placeholder="小区名称">
+                    </div>
+                    <div class="pull-left" style="margin-right:10px; width: 80px">
+                        <input id="building" name="building" type="text" class="width-100" placeholder="楼栋">
+                    </div>
+                    <div class="pull-left" style="margin-right:10px; width: 80px">
+                        <input id="unit" name="unit" type="text" class="width-100" placeholder="单元">
+                    </div>
+                    <div class="pull-left" style="margin-right:10px; width: 80px">
+                        <input id="floor" name="floor" type="text" class="width-100" placeholder="楼层">
+                    </div>
+                    <div class="pull-left" style="margin-right:10px; width: 80px">
+                        <input id="num" name="num" type="text" class="width-100" placeholder="房号">
                     </div>
 
                     <span class="pull-left" style="margin:3px 0 0 10px;">
@@ -62,10 +77,23 @@
 
     function searchSub(){
         var key = $("#key").val();
+        var park_name = $("#park_name").val();
+        var building = $("#building").val();
+        var unit = $("#unit").val();
+        var floor = $("#floor").val();
+        var num = $("#num").val();
         var process_state = $("#process_state").val();
         $("#grid-table").jqGrid('setGridParam',{
             url:"/client/list",
-            postData:{key:key,process_state:process_state}
+            postData:{
+                key:key,
+                process_state:process_state,
+                park_name:park_name,
+                building:building,
+                unit:unit,
+                floor:floor,
+                num:num
+            }
         }).trigger("reloadGrid");
     }
 
@@ -84,12 +112,16 @@
                     [
                         {name : 'id',index : 'id',hidden : true,width :0,sorttype : "int",editable : false, fixed:false},
                         {name : 'name',label:'姓名',index :'name',sorttype : "int",editable : false, fixed:false,formatter:function(value, options, rData){
-                            return '<a href="/client/album/'+rData.id+'">'+value+'</a>'
+                            return '<a href="/client/info/'+rData.id+'">'+value+'</a>'
                         }},
                         {name : 'phone',label:'电话',index :'phone',sorttype : "int",editable : false, fixed:false},
-                        {name : 'qq',label:'QQ',index :'qq',sorttype : "int",editable : false, fixed:false},
                         {name : 'park_name',index : 'park_name',label:'小区名称',editable : false, fixed:false},
-                        {name : 'house_name',index :'house_name',label:'房号',editable : false, fixed:false},
+                        {name : 'building',index : 'building',label:'栋号',editable : false, fixed:false},
+                        {name : 'unit',index : 'unit',label:'单元',editable : false, fixed:false},
+                        {name : 'floor',index : 'floor',label:'楼层',editable : false, fixed:false},
+                        {name : 'num',index :'num',label:'房号',editable : false, fixed:false},
+                        {name : 'house_name',index :'house_name',label:'地址',editable : false, fixed:false},
+                        {name : 'area',index :'area',label:'面积(㎡)',editable : false, fixed:false},
                         {name : 'process_state',index :'process_state',label:'处理状态',editable : false, fixed:false,formatter:function(value){
                             if (value == 'NOT'){
                               return '<span class="label label-sm label-primary arrowed arrowed-right">未联系</span>';
@@ -101,11 +133,10 @@
                                 return '<span class="label label-sm label-danger arrowed arrowed-right">已出售</span>';
                             }
                         }},
-                        {name : 'id',index : 'id',label:'操作',fixed : true,width:200,sortable : false,resize : false,formatter : function(value, options, rData){
+                        {name : 'id',index : 'id',label:'操作',fixed : true, width:150,sortable : false,resize : false,formatter : function(value, options, rData){
                             var html = '';
-                            html += '<button class="btn no-border btn-minier btn-danger Js_process" onclick="show_process('+value+',\''+rData.process_state+'\',\''+rData.process_remark+'\')">处理</button>&nbsp;&nbsp;&nbsp;&nbsp;';
+                            html += '<a class="btn no-border btn-minier btn-danger Js_process" href="/client/info/'+value+'">查看</a>&nbsp;&nbsp;&nbsp;&nbsp;';
                             html += '<a class="btn no-border btn-minier btn-primary" href="/client/update/'+value+'">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;';
-                            html += '<a class="btn no-border btn-minier btn-pink" href="/client/album/'+value+'">相册</a>&nbsp;&nbsp;&nbsp;&nbsp;';
                             html += '<button class="btn no-border btn-minier btn-warning" onclick="deleteInfo('+value+')" >删除</button>';
 
                             return html;

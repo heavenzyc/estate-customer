@@ -20,21 +20,39 @@
                     </div>
                 </div>
                 <div class="form-group"  >
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">QQ</label>
-                    <div class="col-sm-10">
-                        <input type="text" id="qq" class="col-xs-10 col-sm-5" name="qq" value="${data.qq}" maxlength="10" placeholder=""/>
-                    </div>
-                </div>
-                <div class="form-group"  >
                     <label class="col-sm-2 control-label no-padding-right" for="form-field-1">小区名称</label>
                     <div class="col-sm-10">
                         <input type="text" id="park_name" class="col-xs-10 col-sm-5" name="park_name" value="${data.park_name}" maxlength="30" placeholder=""/>
                     </div>
                 </div>
                 <div class="form-group"  >
-                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1">房屋地址</label>
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1"><label class="color-orange">*</label>栋号</label>
                     <div class="col-sm-10">
-                        <input type="text" id="house_name" class="col-xs-10 col-sm-5" name="house_name" value="${data.house_name}" maxlength="30" placeholder="例如：1栋1单元101"/>
+                        <input type="text" id="building" class="col-xs-10 col-sm-5" name="building" value="${data.building}" maxlength="10" placeholder=""/><span class="form-text">&nbsp;栋</span>
+                    </div>
+                </div>
+                <div class="form-group"  >
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1"><label class="color-orange">*</label>单元</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="unit" class="col-xs-10 col-sm-5" name="unit" value="${data.unit}" maxlength="10" placeholder=""/><span class="form-text">&nbsp;单元</span>
+                    </div>
+                </div>
+                <div class="form-group"  >
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1"><label class="color-orange">*</label>楼层</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="floor" class="col-xs-10 col-sm-5" name="floor" value="${data.floor}" maxlength="10" placeholder=""/><span class="form-text">&nbsp;层</span>
+                    </div>
+                </div>
+                <div class="form-group"  >
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1"><label class="color-orange">*</label>房号</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="num" class="col-xs-10 col-sm-5" name="num" value="${data.num}" maxlength="10" placeholder="例如：801"/>
+                    </div>
+                </div>
+                <div class="form-group"  >
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1"><label class="color-orange">*</label>面积</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="area" class="col-xs-10 col-sm-5" name="area" value="${data.area}" maxlength="10" placeholder="例如：120.4"/><span class="form-text">&nbsp;平米</span>
                     </div>
                 </div>
                 <div class="form-group"  >

@@ -2,7 +2,7 @@
 <@we.html css=[] js=[]>
 <div class="page-content">
         <div class="col-xs-12">
-            <button class="btn btn-primary Js_upload_pics" data-config-code="${id}" data-config-maxsize="10200000" data-config-type=".jpg|.bmp|.png">上传图片</button>
+            <#--<button class="btn btn-primary Js_upload_pics" data-config-code="${id}" data-config-maxsize="10200000" data-config-type=".jpg|.bmp|.png">上传图片</button>-->
             <div class="hr"></div>
 
             <!-- PAGE CONTENT BEGINS -->
@@ -64,7 +64,7 @@
 
     jQuery(function($) {
         $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-        $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
+        $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");
 
         //调用上传图片
         uploadPic("Js_upload_pics",function(data){
