@@ -4,7 +4,7 @@
 <div class="page-content">
     <div class="page-header">
         <button class="btn btn-primary JS_improt">导入数据</button>
-        <a class="btn btn-danger" href="/client/exportExcel">导出数据</a>
+        <#--<a class="btn btn-danger" href="/client/exportExcel">导出数据</a>-->
         <a class="btn btn-success" href="/client/add">添加数据</a>
     </div>
 
