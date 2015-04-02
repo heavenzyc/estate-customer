@@ -24,14 +24,15 @@ public class IndexController extends BaseController{
     private static final Logger log = LoggerFactory.getLogger(IndexController.class);
 
     public void index() {
-        renderFreeMarker("login.ftl");
+        renderTop("/client/index");
+//        renderFreeMarker("login.ftl");
     }
 
     @ClearInterceptor(ClearLayer.ALL)
     public void login() {
         // 解出帐户与密码
         /*String[] result = RSAUtils.decryptUsernameAndPwd(getPara("key"));*/
-        String username = getPara("username");
+        /*String username = getPara("username");
         String password = getPara("password");
         if (!"admin".equals(username) || !"admin".equals(password)) {
             forwardAction("密码错误", "/");
@@ -40,7 +41,10 @@ public class IndexController extends BaseController{
             getSession().setAttribute("operator",username);
             renderTop("/client/index");
             return;
-        }
+        }*/
+//        getSession().setAttribute("operator",username);
+        renderTop("/client/index");
+        return;
     }
 
     public void logout() {
