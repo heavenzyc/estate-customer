@@ -84,7 +84,6 @@ public class ClientController extends BaseController {
     public Client buildClient(Integer id){
         String name = getPara("name");
         String phone = getPara("phone");
-        String qq = getPara("qq");
         String park_name = getPara("park_name");
         String house_name = getPara("house_name");
         String remark = getPara("remark");
@@ -105,7 +104,6 @@ public class ClientController extends BaseController {
         }
         client.set("name",name);
         client.set("phone",phone);
-        client.set("qq",qq);
         client.set("park_name",park_name);
         client.set("house_name",building+"栋"+unit+"单元"+num);
         client.set("remark",remark);
