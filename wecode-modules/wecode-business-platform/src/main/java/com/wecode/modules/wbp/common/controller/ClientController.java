@@ -289,7 +289,7 @@ public class ClientController extends BaseController {
                 HSSFCell phone = xssfRow.getCell(7);
                 if (phone != null) {
                     String phoneStr = getValue(phone);
-                    if (StringUtils.isNotBlank(phoneStr) && phoneStr.length() > 11) {
+                    if (StringUtils.isNotBlank(phoneStr) && phoneStr.length() > 11 && phoneStr.contains(".")) {
                         phoneStr = phoneStr.substring(0,phoneStr.length()-3).replace(".","");
                         client.set("phone",phoneStr);
                     }else {
@@ -412,7 +412,7 @@ public class ClientController extends BaseController {
                 XSSFCell phone = xssfRow.getCell(7);
                 if (phone != null) {
                     String phoneStr = getValue(phone);
-                    if (StringUtils.isNotBlank(phoneStr) && phoneStr.length() > 11) {
+                    if (StringUtils.isNotBlank(phoneStr) && phoneStr.length() > 11 && phoneStr.contains(".")) {
                         phoneStr = phoneStr.substring(0,phoneStr.length()-3).replace(".","");
                         client.set("phone",phoneStr);
                     }else {
